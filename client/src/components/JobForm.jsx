@@ -5,7 +5,7 @@ const STATUSES = ['Applied', 'Interview', 'Offer', 'Rejected'];
 
 const EMPTY_FORM = {
   company: '',
-  jobTitle: '',
+  title: '',
   status: 'Applied',
   applicationDate: '',
   jobLink: '',
@@ -19,7 +19,7 @@ export default function JobForm({ initialData, onSubmit, onClose, loading }) {
     if (initialData) {
       setForm({
         company: initialData.company ?? '',
-        jobTitle: initialData.jobTitle ?? '',
+        title: initialData.title ?? '',
         status: initialData.status ?? 'Applied',
         applicationDate: initialData.applicationDate
           ? new Date(initialData.applicationDate).toISOString().split('T')[0]
@@ -79,8 +79,8 @@ export default function JobForm({ initialData, onSubmit, onClose, loading }) {
               Job Title <span className="text-red-500">*</span>
             </label>
             <input
-              name="jobTitle"
-              value={form.jobTitle}
+              name="title"
+              value={form.title}
               onChange={handleChange}
               required
               placeholder="e.g. Frontend Developer"

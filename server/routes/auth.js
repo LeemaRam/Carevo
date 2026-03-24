@@ -33,7 +33,10 @@ router.post(
       const user = await User.create({ name, email, password });
       const token = signToken(user);
 
-      res.status(201).json({ token });
+      res.status(201).json({
+        token,
+        user: { id: user._id, name: user.name, email: user.email },
+      });
     } catch (err) {
       next(err);
     }
