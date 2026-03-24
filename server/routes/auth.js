@@ -4,9 +4,14 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
 const router = express.Router();
+const JWT_SECRET = process.env.JWT_SECRET || 'dev_jwt_secret_change_me';
+
+if (!process.env.JWT_SECRET) {
+  console.warn('JWT_SECRET is not set. Using insecure development fallback secret.');
+}
 
 const signToken = (user) =>
-  jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET, { expiresIn: '7d' });
+  jwt.sign({ id: user._id, email: user.email }, JWT_SECRET, { expiresIn: '7d' });
 
 // POST /api/auth/register
 router.post(
