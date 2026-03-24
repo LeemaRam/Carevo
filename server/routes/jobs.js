@@ -36,15 +36,34 @@ router.get('/stats', async (req, res, next) => {
   try {
     const userId = req.user.id;
 
-    const [total, applied, interview, offer, rejected] = await Promise.all([
+    const [total, applied, interview, offer, rejected, monthlyRaw] = await Promise.all([
       Job.countDocuments({ userId }),
       Job.countDocuments({ userId, status: 'Applied' }),
       Job.countDocuments({ userId, status: 'Interview' }),
       Job.countDocuments({ userId, status: 'Offer' }),
       Job.countDocuments({ userId, status: 'Rejected' }),
+      Job.aggregate([
+        { $match: { userId: new mongoose.Types.ObjectId(userId) } },
+        {
+          $group: {
+            _id: {
+              year: { $year: '$applicationDate' },
+              month: { $month: '$applicationDate' },
+            },
+            count: { $sum: 1 },
+          },
+        },
+        { $sort: { '_id.year': 1, '_id.month': 1 } },
+      ]),
     ]);
 
-    res.json({ total, applied, interview, offer, rejected });
+    const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const monthly = monthlyRaw.map(d => ({
+      month: `${MONTHS[d._id.month - 1]} ${d._id.year}`,
+      count: d.count,
+    }));
+
+    res.json({ total, applied, interview, offer, rejected, monthly });
   } catch (err) {
     next(err);
   }
