@@ -10,6 +10,17 @@ Built with React, Node.js, Express, and MongoDB. Carevo helps you stay on top of
 ![React](https://img.shields.io/badge/react-19-61DAFB.svg)
 
 ---
+<h2 align="center">🚀 Project Demo</h2>
+
+<p align="center">
+  <img src="./Carevo.gif" alt="Demo" width="800"/>
+</p>
+
+<p align="center">
+  <a href="https://your-live-site.com">🌐 Live Demo</a> •
+  <a href="https://github.com/your-repo">📂 Source Code</a>
+</p>
+---
 
 ## ✨ Features
 
