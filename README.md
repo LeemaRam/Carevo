@@ -2,7 +2,8 @@
 
 > **Track your job applications. Take control of your career.**
 
-A modern, production-ready full-stack Job Tracker built with React, Node.js, Express, and MongoDB. Carevo helps you stay on top of every application — from the first "Applied" to the final "Offer".
+A full-stack job tracking application that helps users manage, organize, and analyze their job applications with a modern dashboard and real-time insights.
+Built with React, Node.js, Express, and MongoDB. Carevo helps you stay on top of every application — from the first "Applied" to the final "Offer".
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Node](https://img.shields.io/badge/node-%3E%3D18-green.svg)
