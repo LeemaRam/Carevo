@@ -8,6 +8,13 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
 import Jobs from './pages/Jobs';
+import Products from './pages/Products';
+import ProductDetails from './pages/ProductDetails';
+import Cart from './pages/Cart';
+import VendorDashboard from './pages/VendorDashboard';
+import VendorProducts from './pages/VendorProducts';
+import AdminProducts from './pages/AdminProducts';
+import AdminCategories from './pages/AdminCategories';
 
 export default function App() {
   return (
@@ -18,7 +25,7 @@ export default function App() {
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
-            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            <Route path="/" element={<Navigate to="/products" replace />} />
             <Route path="/dashboard" element={
               <ProtectedRoute>
                 <Layout>
@@ -30,6 +37,55 @@ export default function App() {
               <ProtectedRoute>
                 <Layout>
                   <Jobs />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/products" element={
+              <ProtectedRoute>
+                <Layout>
+                  <Products />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/products/:id" element={
+              <ProtectedRoute>
+                <Layout>
+                  <ProductDetails />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/cart" element={
+              <ProtectedRoute>
+                <Layout>
+                  <Cart />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/vendor/dashboard" element={
+              <ProtectedRoute roles={['vendor']}>
+                <Layout>
+                  <VendorDashboard />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/vendor/products" element={
+              <ProtectedRoute roles={['vendor']}>
+                <Layout>
+                  <VendorProducts />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/products" element={
+              <ProtectedRoute roles={['admin']}>
+                <Layout>
+                  <AdminProducts />
+                </Layout>
+              </ProtectedRoute>
+            } />
+            <Route path="/admin/categories" element={
+              <ProtectedRoute roles={['admin']}>
+                <Layout>
+                  <AdminCategories />
                 </Layout>
               </ProtectedRoute>
             } />

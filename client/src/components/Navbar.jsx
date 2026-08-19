@@ -6,6 +6,12 @@ import { useLocation } from 'react-router-dom';
 const pageTitles = {
   '/dashboard': 'Dashboard',
   '/jobs': 'My Applications',
+  '/products': 'Products',
+  '/cart': 'Shopping Cart',
+  '/vendor/dashboard': 'Vendor Dashboard',
+  '/vendor/products': 'Vendor Products',
+  '/admin/products': 'Product Management',
+  '/admin/categories': 'Category Management',
 };
 
 export default function Navbar({ onMenuClick }) {
@@ -13,7 +19,7 @@ export default function Navbar({ onMenuClick }) {
   const { user } = useAuth();
   const { pathname } = useLocation();
 
-  const title = pageTitles[pathname] ?? 'Carevo';
+  const title = pathname.startsWith('/products/') ? 'Product Details' : (pageTitles[pathname] ?? 'Carevo');
 
   return (
     <header className="h-16 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between px-4 md:px-6 flex-shrink-0">

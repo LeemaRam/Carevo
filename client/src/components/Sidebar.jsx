@@ -1,15 +1,30 @@
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Briefcase, PlusCircle, LogOut, X, Car } from 'lucide-react';
+import { LayoutDashboard, Briefcase, ShoppingCart, Store, ShieldCheck, Tags, LogOut, X, Car } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
-const navItems = [
-  { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { to: '/jobs', label: 'Jobs', icon: Briefcase },
-  { to: '/jobs?modal=add', label: 'Add Job', icon: PlusCircle },
-];
+const navByRole = {
+  customer: [
+    { to: '/products', label: 'Products', icon: Store },
+    { to: '/cart', label: 'Cart', icon: ShoppingCart },
+    { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { to: '/jobs', label: 'Jobs', icon: Briefcase },
+  ],
+  vendor: [
+    { to: '/vendor/dashboard', label: 'Vendor Dashboard', icon: LayoutDashboard },
+    { to: '/vendor/products', label: 'My Products', icon: Store },
+    { to: '/products', label: 'Marketplace', icon: Briefcase },
+    { to: '/cart', label: 'Cart', icon: ShoppingCart },
+  ],
+  admin: [
+    { to: '/admin/products', label: 'Product Management', icon: ShieldCheck },
+    { to: '/admin/categories', label: 'Categories', icon: Tags },
+    { to: '/products', label: 'Customer Products', icon: Store },
+  ],
+};
 
 export default function Sidebar({ open, onClose }) {
   const { user, logout } = useAuth();
+  const navItems = navByRole[user?.role] ?? navByRole.customer;
 
   return (
     <>

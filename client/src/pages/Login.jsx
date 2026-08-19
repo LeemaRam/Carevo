@@ -24,7 +24,9 @@ export default function Login() {
       const { data } = await axios.post('/api/auth/login', form);
       auth.login(data.user, data.token);
       toast.success(`Welcome back, ${data.user.name}!`);
-      navigate('/dashboard');
+      if (data.user.role === 'vendor') navigate('/vendor/dashboard');
+      else if (data.user.role === 'admin') navigate('/admin/products');
+      else navigate('/products');
     } catch (err) {
       toast.error(err.response?.data?.message ?? 'Login failed. Please try again.');
     } finally {

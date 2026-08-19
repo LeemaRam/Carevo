@@ -6,7 +6,7 @@ import { Car, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 export default function Signup() {
-  const [form, setForm] = useState({ name: '', email: '', password: '' });
+  const [form, setForm] = useState({ name: '', email: '', password: '', role: 'customer', businessName: '' });
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const auth = useAuth();
@@ -23,12 +23,24 @@ export default function Signup() {
       toast.error('Password must be at least 6 characters.');
       return;
     }
+    if (form.role === 'vendor' && form.businessName.trim().length < 2) {
+      toast.error('Business name is required for vendor accounts.');
+      return;
+    }
     setLoading(true);
     try {
-      const { data } = await axios.post('/api/auth/register', form);
+      const payload = {
+        name: form.name,
+        email: form.email,
+        password: form.password,
+        role: form.role,
+      };
+      if (form.role === 'vendor') payload.businessName = form.businessName;
+      const { data } = await axios.post('/api/auth/register', payload);
       auth.login(data.user, data.token);
       toast.success(`Account created! Welcome, ${data.user.name}!`);
-      navigate('/dashboard');
+      if (data.user.role === 'vendor') navigate('/vendor/dashboard');
+      else navigate('/products');
     } catch (err) {
       toast.error(err.response?.data?.message ?? 'Signup failed. Please try again.');
     } finally {
@@ -82,6 +94,38 @@ export default function Signup() {
                 className="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
               />
             </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+                Account type
+              </label>
+              <select
+                name="role"
+                value={form.role}
+                onChange={handleChange}
+                className="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
+              >
+                <option value="customer">Customer</option>
+                <option value="vendor">Vendor</option>
+              </select>
+            </div>
+
+            {form.role === 'vendor' && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+                  Business name
+                </label>
+                <input
+                  type="text"
+                  name="businessName"
+                  value={form.businessName}
+                  onChange={handleChange}
+                  required
+                  placeholder="Your store name"
+                  className="w-full px-4 py-2.5 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
+                />
+              </div>
+            )}
 
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
