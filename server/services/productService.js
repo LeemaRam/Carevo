@@ -17,6 +17,12 @@ const buildProductPayload = (body) => ({
 });
 
 const validateCategory = async (categoryId) => {
+  if (!mongoose.Types.ObjectId.isValid(categoryId)) {
+    const error = new Error('Invalid category.');
+    error.status = 400;
+    throw error;
+  }
+
   const category = await Category.findOne({ _id: categoryId, status: 'active' });
   if (!category) {
     const error = new Error('Invalid category.');
@@ -27,6 +33,12 @@ const validateCategory = async (categoryId) => {
 
 const assertSkuAvailable = async (sku, excludeProductId) => {
   if (!sku) return;
+  if (!/^[A-Za-z0-9._-]+$/.test(sku)) {
+    const error = new Error('SKU contains invalid characters.');
+    error.status = 400;
+    throw error;
+  }
+
   const filter = { sku };
   if (excludeProductId) {
     filter._id = { $ne: excludeProductId };

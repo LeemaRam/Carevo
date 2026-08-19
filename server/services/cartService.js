@@ -5,6 +5,15 @@ const Product = require('../models/Product');
 const ProductImage = require('../models/ProductImage');
 const { getEffectivePrice } = require('../utils/productHelpers');
 
+const toObjectId = (value) => {
+  if (!mongoose.Types.ObjectId.isValid(value)) {
+    const error = new Error('Invalid ID.');
+    error.status = 400;
+    throw error;
+  }
+  return new mongoose.Types.ObjectId(value);
+};
+
 const getOrCreateCart = async (userId) => {
   let cart = await Cart.findOne({ userId });
   if (!cart) {
@@ -14,13 +23,8 @@ const getOrCreateCart = async (userId) => {
 };
 
 const ensurePurchasableProduct = async (productId) => {
-  if (!mongoose.Types.ObjectId.isValid(productId)) {
-    const error = new Error('Invalid product ID.');
-    error.status = 400;
-    throw error;
-  }
-
-  const product = await Product.findById(productId);
+  const normalizedProductId = toObjectId(productId);
+  const product = await Product.findById(normalizedProductId);
   if (!product || product.status !== 'approved') {
     const error = new Error('Product is not available.');
     error.status = 400;
@@ -86,7 +90,8 @@ const addCartItem = async (userId, productId, quantity) => {
   }
 
   const [cart, product] = await Promise.all([getOrCreateCart(userId), ensurePurchasableProduct(productId)]);
-  const existing = await CartItem.findOne({ cartId: cart._id, productId });
+  const normalizedProductId = toObjectId(productId);
+  const existing = await CartItem.findOne({ cartId: cart._id, productId: normalizedProductId });
 
   const finalQuantity = existing ? existing.quantity + qty : qty;
   if (finalQuantity > product.stockQuantity) {
@@ -102,7 +107,7 @@ const addCartItem = async (userId, productId, quantity) => {
   } else {
     await CartItem.create({
       cartId: cart._id,
-      productId,
+      productId: normalizedProductId,
       quantity: qty,
       price: getEffectivePrice(product),
     });

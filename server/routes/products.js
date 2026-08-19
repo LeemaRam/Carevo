@@ -4,6 +4,7 @@ const Product = require('../models/Product');
 const ProductImage = require('../models/ProductImage');
 
 const router = express.Router();
+const escapeRegex = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 router.get('/', async (req, res, next) => {
   try {
@@ -11,7 +12,7 @@ router.get('/', async (req, res, next) => {
     const filter = { status: 'approved' };
 
     if (search) {
-      const regex = new RegExp(search, 'i');
+      const regex = new RegExp(escapeRegex(search), 'i');
       filter.$or = [{ name: regex }, { description: regex }, { sku: regex }];
     }
 
